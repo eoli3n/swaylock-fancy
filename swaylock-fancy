@@ -44,6 +44,8 @@ options="Options:
 
     -K, --hide-keyboard-layout          Force hiding the current xkb layout while typing.
 
+    --daemonize                         Detach from the controlling terminal after locking.
+
     -l, --listfonts  Display a list of possible fonts for use with -f/--font.
                      Note: this option will not lock the screen, it displays
                      the list and exits immediately."
@@ -51,7 +53,7 @@ options="Options:
 # move pipefail down as for some reason "convert -list font" returns 1
 set -o pipefail
 trap 'rm -f "${images[*]}"' EXIT
-temp="$(getopt -o :hdnpglt:FeLK:f: -l desktop,help,listfonts,nofork,show-failed-attempts,ignore-empty-password,disable-caps-lock-text,hide-keyboard-layout,pixelate,greyscale,text:,font: --name "$0" -- "$@")"
+temp="$(getopt -o :hdnpglt:FeLK:f: -l desktop,help,listfonts,nofork,show-failed-attempts,ignore-empty-password,disable-caps-lock-text,hide-keyboard-layout,pixelate,greyscale,daemonize,text:,font: --name "$0" -- "$@")"
 eval set -- "$temp"
 
 # l10n support
@@ -92,7 +94,7 @@ while true ; do
 	    convert -list font | awk -F: '/Font: / { print $2 }' | sort -du | command -- ${PAGER:-less}
 	    exit 0 ;;
 	-n|--nofork) swaylock_cmd+=(--nofork) ; shift ;;
-        -F|-e|-K|-L|--show-failed-attempts|--ignore-empty-password|--disable-caps-lock-text|--hide-keyboard-layout) swaylock_cmd+=("$1"); shift ;;
+        -F|-e|-K|-L|--show-failed-attempts|--ignore-empty-password|--disable-caps-lock-text|--hide-keyboard-layout|--daemonize) swaylock_cmd+=("$1"); shift ;;
         --) shift; break ;;
         *) echo "error" ; exit 1 ;;
     esac

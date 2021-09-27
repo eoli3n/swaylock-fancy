@@ -36,6 +36,12 @@ options="Options:
 
     -t <text>, --text <text>            Set a custom text prompt.
 
+    -l, --listfonts  Display a list of possible fonts for use with -f/--font.
+                     Note: this option will not lock the screen, it displays
+                     the list and exits immediately.
+
+    -n, --nofork     Do not fork swaylock after starting.
+
     -F, --show-failed-attempts          Show the number of failed authentication attempts.
 
     -e, --ignore-empty-password         Don't validate empty passwords.
@@ -59,13 +65,15 @@ eval set -- "$temp"
 # l10n support
 text="Type password to unlock"
 case "${LANG:-}" in
-    af_* ) text="Tipe wagwoord om te ontsluit" ;; # Afrikaans
+    af_* ) text="Tik wagwoord om te ontsluit" ;; # Afrikaans
+    cs_* ) text="Pro odemčení zadajte heslo" ;; # Czech
     de_* ) text="Bitte Passwort eingeben" ;; # Deutsch
     da_* ) text="Indtast adgangskode" ;; # Danish
     en_* ) text="Type password to unlock" ;; # English
     es_* ) text="Ingrese su contraseña" ;; # Española
     fr_* ) text="Entrez votre mot de passe" ;; # Français
     he_* ) text="הליענה לטבל המסיס דלקה" ;; # Hebrew עברית (convert doesn't play bidi well)
+    hi_* ) text="अनलॉक करने के लिए पासवर्ड टाईप करें" ;; #Hindi
     id_* ) text="Masukkan kata sandi Anda" ;; # Bahasa Indonesia
     it_* ) text="Inserisci la password" ;; # Italian
     ja_* ) text="パスワードを入力してください" ;; # Japanese
@@ -73,11 +81,13 @@ case "${LANG:-}" in
     nb_* ) text="Skriv inn passord" ;; # Norwegian
     pl_* ) text="Podaj hasło" ;; # Polish
     pt_* ) text="Digite a senha para desbloquear" ;; # Português
+    sk_* ) text="Pre odomknutie zadajte heslo" ;; # Slovak
+    tr_* ) text="Giriş yapmak için şifrenizi girin" ;; # Turkish
     ru_* ) text="Введите пароль" ;; # Russian
     * ) text="Type password to unlock" ;; # Default to English
 esac
 
-while true ; do
+while [[ $# > 0 ]] ; do
     case "$1" in
         -h|--help)
             printf "Usage: %s [options]\n\n%s\n\n" "${0##*/}" "$options"; exit 1 ;;
@@ -96,9 +106,10 @@ while true ; do
 	-n|--nofork) swaylock_cmd+=(--nofork) ; shift ;;
         -F|-e|-K|-L|--show-failed-attempts|--ignore-empty-password|--disable-caps-lock-text|--hide-keyboard-layout|--daemonize) swaylock_cmd+=("$1"); shift ;;
         --) shift; break ;;
-        *) echo "error" ; exit 1 ;;
+        *) echo "unrecognized option: $1" ; exit 1 ;;
     esac
 done
+
 
 swaylock_cmd+=("--indicator-radius" "85")
 
@@ -115,6 +126,7 @@ do
     if (( $i == 0 )); then
         if [[ $color -gt $value ]]; then #white background image and black text
             bw="black"
+            icon="$PREFIX/icons/lockdark.png"
             param=("--inside-color=0000001c" "--ring-color=0000003e" \
                 "--line-color=00000000" "--key-hl-color=ffffff80" "--ring-ver-color=ffffff00" \
                 "--separator-color=22222260" "--inside-ver-color=ff99441c" \
@@ -122,13 +134,12 @@ do
                 "--ring-wrong-color=ffffff55" "--inside-wrong-color=ffffff1c" "--text-ver-color=00000000" \
                 "--text-wrong-color=00000000" "--text-caps-lock-color=00000000" "--text-clear-color=00000000" \
                 "--line-clear-color=00000000" "--line-wrong-color=00000000" "--line-ver-color=00000000" "--text-color=DB3300FF")
-            icon="$PREFIX/icons/lockdark.png"
         else #black
             bw="white"
             icon="$PREFIX/icons/lock.png"
             param=("--inside-color=ffffff1c" "--ring-color=ffffff3e" \
                 "--line-color=ffffff00" "--key-hl-color=00000080" "--ring-ver-color=00000000" \
-                "--separator-color=22222260" "--inside-ver-color=ff99441c" \
+                "--separator-color=22222260" "--inside-ver-color=0000001c" \
                 "--ring-clear-color=ff994430" "--inside-clear-color=ff994400" \
                 "--ring-wrong-color=00000055" "--inside-wrong-color=0000001c" "--text-ver-color=00000000" \
                 "--text-wrong-color=00000000" "--text-caps-lock-color=00000000" "--text-clear-color=00000000" \

@@ -8,8 +8,7 @@ This is an swaylock bash script that takes a screenshot of the desktop, blurs th
 Dependencies
 ------------
 * <s>[i3lock-color-git](https://github.com/eBrnd/i3lock-color)</s>
-* <s>[i3lock-color-git](https://github.com/PandorasFox/i3lock-color) - this is a fork of i3lock-color that is kept up to date with i3lock</s>
-* [i3lock-fancy-git](https://github.com/meskarune/i3lock-fancy) - this is a fork of i3lock-fancy that is kept up to date with i3lock
+* [i3lock-color-git](https://github.com/Raymo111/i3lock-color) - this is a fork of i3lock-color that is kept up to date with i3lock
 * imagemagick
 * bash
 * awk
@@ -58,7 +57,14 @@ Usage
                          Note: this option will not lock the screen, it displays
                          the list and exits immediately.
 
-Example: ```swaylock-fancy -gpf Comic-Sans-MS```
+        -n, --nofork     Do not fork i3lock after starting.
+
+        --               Must be last option. Set command to use for taking a
+                         screenshot. Default is 'import -window root'. Using 'scrot'
+                         or 'maim' will increase script speed and allow setting
+                         custom flags like having a delay.
+
+example: ```swaylock-fancy -gpf Comic-Sans-MS -- scrot -z```
 
 Extras
 ------

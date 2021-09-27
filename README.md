@@ -57,12 +57,7 @@ Usage
                          Note: this option will not lock the screen, it displays
                          the list and exits immediately.
 
-        -n, --nofork     Do not fork i3lock after starting.
-
-        --               Must be last option. Set command to use for taking a
-                         screenshot. Default is 'import -window root'. Using 'scrot'
-                         or 'maim' will increase script speed and allow setting
-                         custom flags like having a delay.
+        -n, --nofork     Do not fork swaylock after starting.
 
 example: ```swaylock-fancy -gpf Comic-Sans-MS -- scrot -z```
 
